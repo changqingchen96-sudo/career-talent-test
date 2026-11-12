@@ -137,4 +137,167 @@ watch:"有时可能过于关注进度，忽略过程中的沟通；也可能承�
 environment:"适合职责明确、目标具体、流程清晰并能看到成果的环境。",
 jobs:"项目助理、运营助理、活动执行、行政协调、流程管理。",
 route:["学习基础办公和任务管理工具","练习把大任务拆成小步骤","独立组织一次小型活动或项目","整理执行成果，尝试相关助理岗位。"],
-plan:["第1—3天：写下一个可实现的小目标"
+plan:["第1—3天：写下一个可实现的小目标","第4—7天：把目标拆成每日任务","第8—12天：练习使用日程或任务清单","第13—18天：独立完成一个小项目","第19—24天：记录时间和执行情况","第25—30天：复盘效率，改进计划方法。"]
+},
+d:{
+name:"人际支持型",symbol:"和",
+desc:"你倾向于关注他人需求，善于交流、倾听和协调关系。",
+strength:"沟通表达、倾听理解、团队协作、服务意识。",
+watch:"有时可能过度照顾别人的感受，忽略自身需求；也可能不容易拒绝额外请求。",
+environment:"适合重视合作、沟通频繁、服务对象和工作职责明确的环境。",
+jobs:"客户服务、教育辅助、人力资源助理、社群运营、用户支持。",
+route:["练习清晰表达和主动倾听","学习客户沟通或基础服务知识","参与一次团队协作或志愿活动","整理经验，尝试客服、运营或教育辅助岗位。"],
+plan:["第1—3天：记录自己常用的沟通方式","第4—7天：练习倾听并复述对方需求","第8—12天：学习基础沟通与服务技巧","第13—18天：完成一次主动沟通练习","第19—24天：复盘一次合作经历","第25—30天：整理经验，设定沟通提升目标。"]
+}
+};
+
+let current=0;
+let answers=[];
+const $=id=>document.getElementById(id);
+const keys=["a","b","c","d"];
+
+function render(){
+ $("number").textContent=`第 ${current+1} / 8 题`;
+ $("question").textContent=questions[current][0];
+ $("bar").style.width=(current/8*100)+"%";
+ $("options").innerHTML=questions[current][1].map(o=>
+ `<label class="option"><input type="radio" name="answer" value="${o[1]}"> ${o[0]}</label>`
+ ).join("");
+ $("next").textContent=current===7?"查看深度报告":"下一题";
+ $("next").disabled=true;
+ document.querySelectorAll('input[name="answer"]').forEach(el=>{
+ el.addEventListener("change",()=>{$("next").disabled=false});
+ });
+}
+
+function next(){
+ const chosen=document.querySelector('input[name="answer"]:checked');
+ if(!chosen)return;
+ answers[current]=chosen.value;
+ current++;
+ if(current<8)render();
+ else showResult();
+}
+
+function showResult(){
+ const scores={a:0,b:0,c:0,d:0};
+ answers.forEach(x=>scores[x]++);
+ const sorted=keys.map(k=>({key:k,score:scores[k]}))
+ .sort((x,y)=>y.score-x.score);
+
+ const top=sorted[0].score;
+ const mainKeys=sorted.filter(x=>x.score===top).map(x=>x.key);
+ const nextScore=sorted.find(x=>x.score<top);
+ const secondKeys=nextScore
+ ? sorted.filter(x=>x.score===nextScore.score).map(x=>x.key)
+ : [];
+
+ const main=mainKeys.map(k=>profiles[k]);
+ const second=secondKeys.map(k=>profiles[k]);
+
+ const mainHTML=main.map(p=>`
+ <div class="card">
+ <h2>${p.symbol} ${p.name}</h2>
+ <p>${p.desc}</p>
+ <p class="section-title">一、潜在优势</p><p>${p.strength}</p>
+ <p class="section-title">二、需要留意的地方</p><p>${p.watch}</p>
+ <p class="section-title">三、适合的工作环境</p><p>${p.environment}</p>
+ <p class="section-title">四、职业方向参考</p><p>${p.jobs}</p>
+ <p class="section-title">五、职业入门路线</p>
+ <ol>${p.route.map(x=>`<li>${x}</li>`).join("")}</ol>
+ </div>`).join("");
+
+ const planProfile=main[0];
+ const planHTML=planProfile.plan.map(x=>`<div class="day">${x}</div>`).join("");
+
+ const scoreHTML=sorted.map(x=>`
+ <div class="score-row"><span>${profiles[x.key].name}</span><b>${x.score}分</b></div>
+ <div class="score-bg"><div class="score-fill" style="width:${x.score/8*100}%"></div></div>
+ `).join("");
+
+ const secondHTML=second.length
+ ? second.map(p=>`<span class="tag">${p.name}</span>`).join("")
+ : "四种类型得分相同或没有较低分类型，本次无法区分次要优势。";
+
+ const date=new Date().toLocaleDateString("zh-CN");
+ const reportText=
+ "天赋寻踪深度报告\n"+
+ "主要优势："+main.map(p=>p.name).join("、")+"\n"+
+ "次要优势："+second.map(p=>p.name).join("、")+"\n"+
+ "测试得分："+sorted.map(x=>profiles[x.key].name+x.score+"分").join("；")+"\n"+
+ "职业方向："+main.map(p=>p.jobs).join("；")+"\n"+
+ "测试日期："+date;
+
+ const data={version:"V3.0",date,answers,scores,mainKeys,secondKeys};
+
+ try{localStorage.setItem("talentTestResultV3",JSON.stringify(data))}
+ catch(e){}
+
+ $("quiz").classList.add("hidden");
+ $("bar").style.width="100%";
+ $("result").classList.remove("hidden");
+ $("result").innerHTML=`
+ <h2 style="text-align:center;color:#36594d">🎋 你的专属深度报告</h2>
+ <p class="small" style="text-align:center">报告日期：${date}</p>
+ <div class="card">
+ <p class="section-title">主要优势类型</p>
+ ${main.map(p=>`<span class="tag">${p.name}</span>`).join("")}
+ <p class="section-title">次要优势类型</p>${secondHTML}
+ <div class="line"></div>
+ <p class="section-title">四项能力得分</p>${scoreHTML}
+ </div>
+ ${mainHTML}
+ <div class="card">
+ <h2>📅 30天成长行动计划</h2>
+ <p>根据你的主要优势类型「${planProfile.name}」生成。每天完成一点，逐步积累经验。</p>
+ ${planHTML}
+ </div>
+ <div class="price">
+ <b>深度报告计划体验价：¥2 / 份</b>
+ <p class="small">当前为免费测试体验版，尚未开通真实支付。页面展示价格不代表已经可以购买。</p>
+ </div>
+ <button onclick="saveResult()">保存测试结果</button>
+ <button class="secondary" onclick="shareResult()">分享测试结果</button>
+ <button class="secondary" onclick="location.reload()">重新测试</button>
+ <p class="small" id="message"></p>
+ <p class="small">本报告根据8道自我选择题生成，仅供兴趣探索和职业思考参考，不保证职业适配或就业结果。</p>
+ `;
+}
+
+function saveResult(){
+ const data=localStorage.getItem("talentTestResultV3");
+ if(!data){$("message").textContent="没有找到测试结果。";return}
+ try{
+ const blob=new Blob([data],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="天赋寻踪V3深度报告.json";
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("message").textContent="已生成结果文件，请查看手机的下载记录。";
+ }catch(e){
+ $("message").textContent="下载失败，请尝试分享结果。";
+ }
+}
+
+async function shareResult(){
+ const data=JSON.parse(localStorage.getItem("talentTestResultV3")||"{}");
+ const names=(data.mainKeys||[]).map(k=>profiles[k].name).join("、");
+ const content=`我完成了天赋寻踪测试！主要优势：${names}。你也可以来探索自己的潜在优势。`;
+ try{
+ if(navigator.share){
+ await navigator.share({title:"我的天赋寻踪报告",text:content,url:location.href});
+ }else if(navigator.clipboard){
+ await navigator.clipboard.writeText(content+" "+location.href);
+ $("message").textContent="分享文字已复制，可以粘贴给朋友。";
+ }else{
+ $("message").textContent=content;
+ }
+ }catch(e){
+ $("message").textContent="分享没有完成，可以再次尝试。";
+ }
+}
+render();
+</script>
+</body>
+</html>
