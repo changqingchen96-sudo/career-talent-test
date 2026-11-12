@@ -4,170 +4,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>发现你的隐藏天赋</title>
+<title>天赋寻踪 · 探索你的隐藏天赋</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:20px;
- font-family:Arial,"Microsoft YaHei",sans-serif;
- background:linear-gradient(135deg,#e9edff,#f9eaff);
- color:#252746
+ margin:0;padding:18px;
+ color:#263d39;
+ font-family:"Noto Serif SC","Songti SC","Microsoft YaHei",serif;
+ background:
+ radial-gradient(ellipse at top,#fff9e9 0%,transparent 65%),
+ linear-gradient(145deg,#e9e0c9,#f5eddb);
 }
 .container{
- max-width:520px;margin:25px auto;
- background:white;padding:24px;
- border-radius:22px;
- box-shadow:0 8px 30px #7772
+ max-width:560px;margin:22px auto;padding:25px 21px;
+ background:#fffaf0;
+ border:1px solid #c9b98e;border-radius:8px;
+ box-shadow:0 8px 30px #51452a20;
+ position:relative;
 }
-h1{text-align:center;color:#6256c9}
-.sub{text-align:center;color:#777}
-.progress{
- height:8px;background:#eee;border-radius:10px;
- overflow:hidden;margin:22px 0
+.container:before{
+ content:"";position:absolute;inset:7px;
+ border:1px solid #e1d5b8;pointer-events:none;
 }
-.bar{height:100%;width:0;background:#7768e8}
-.question{font-size:19px;font-weight:bold;margin:22px 0}
+header{text-align:center;position:relative}
+.seal{
+ display:inline-block;padding:5px 12px;
+ border:1px solid #a34d38;color:#a34d38;
+ font-size:12px;letter-spacing:3px;
+ transform:rotate(-3deg);
+}
+h1{font-size:29px;letter-spacing:5px;color:#294b43;margin:17px 0 8px}
+.sub{color:#85785d;font-size:14px;letter-spacing:2px}
+.line{height:1px;background:linear-gradient(90deg,transparent,#b69b61,transparent);margin:20px 0}
+.progress{height:7px;background:#e9e0ce;border-radius:10px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#52766a,#c09a50);transition:.3s}
+.question{font-size:19px;font-weight:bold;line-height:1.8;margin:24px 0 15px}
+.number{font-size:13px;color:#9b8355}
 .option{
- display:block;padding:15px;margin:12px 0;
- border:1px solid #ddd;border-radius:12px;
- cursor:pointer
+ display:block;padding:14px;margin:11px 0;
+ border:1px solid #ded2b7;border-radius:5px;
+ background:#fffdf7;line-height:1.6;cursor:pointer;
+ transition:.2s
 }
 .option:has(input:checked){
- border-color:#7565df;background:#f0edff
+ border-color:#55786c;background:#edf2e9;
+ color:#294b43
 }
-input{margin-right:9px}
+input{accent-color:#55786c;margin-right:9px}
 button{
- width:100%;padding:15px;border:0;
- border-radius:12px;background:#7061dc;
- color:white;font-size:17px;margin-top:15px
+ width:100%;padding:14px;border:1px solid #526f62;
+ border-radius:5px;background:#36594d;
+ color:#fff8e9;font-size:16px;letter-spacing:2px;
+ margin-top:13px;cursor:pointer
 }
 button:disabled{opacity:.4}
-.result{
- background:#f4f1ff;padding:18px;
- border-radius:15px;line-height:1.9
+button.secondary{background:#f8f1e2;color:#36594d}
+.result-card{
+ background:#f5f0e3;border:1px solid #d8c9a7;
+ padding:18px;border-radius:5px;line-height:1.9;
+ margin:15px 0
 }
+.result-card h2{color:#36594d;text-align:center}
+.tag{
+ display:inline-block;border:1px solid #b49b65;
+ padding:3px 9px;margin:3px;color:#80683d;font-size:12px
+}
+.section-title{color:#8a7040;font-weight:bold;margin-top:17px}
+.small{font-size:12px;color:#95896f;line-height:1.8}
 .hidden{display:none}
-.small{font-size:13px;color:#888;line-height:1.7}
+.score-row{display:flex;justify-content:space-between;margin:8px 0}
+.score-bg{height:7px;background:#e7dfcf;border-radius:8px;overflow:hidden}
+.score-fill{height:100%;background:#789184}
+footer{text-align:center;margin-top:22px;color:#9a8a6c;font-size:12px}
 </style>
 </head>
 <body>
 <div class="container">
- <h1>✨ 发现你的隐藏天赋</h1>
- <p class="sub">8道题，探索你的潜在优势</p>
+<header>
+ <div class="seal">古风 · 天赋探索</div>
+ <h1>天赋寻踪</h1>
+ <p class="sub">观己所长 · 寻心之所向</p>
+</header>
+<div class="line"></div>
+
+<div id="quiz">
  <div class="progress"><div class="bar" id="bar"></div></div>
- <div id="quiz">
-  <div id="number"></div>
-  <div class="question" id="question"></div>
-  <div id="options"></div>
-  <button id="next" disabled onclick="next()">下一题</button>
- </div>
- <div id="result" class="hidden"></div>
- <p class="small">
- 本测试仅用于兴趣探索和娱乐参考，不属于专业心理测评或职业资格评估。
- </p>
+ <p class="number" id="number"></p>
+ <div class="question" id="question"></div>
+ <div id="options"></div>
+ <button id="next" disabled onclick="next()">下一题</button>
 </div>
+
+<div id="result" class="hidden"></div>
+
+<footer>
+ 一测观其趣，长久见其才<br>
+ 本测试仅用于兴趣探索与娱乐参考，不属于专业心理测评或职业资格评估。
+</footer>
+</div>
+
 <script>
 const questions=[
 ["遇到陌生问题，你通常会？",[
-["先分析原因和规律","a"],["想出新方法","b"],
-["马上制定行动计划","c"],["找人交流讨论","d"]]],
+["先分析原因和规律","a"],["想出新方法","b"],["马上制定行动计划","c"],["找人交流讨论","d"]]],
 ["你最喜欢哪种事情？",[
-["研究知识","a"],["设计创作","b"],
-["组织活动","c"],["帮助别人","d"]]],
+["研究知识","a"],["设计创作","b"],["组织活动","c"],["帮助别人","d"]]],
 ["团队合作时，你通常负责？",[
-["分析问题","a"],["提出创意","b"],
-["安排任务","c"],["沟通协调","d"]]],
+["分析问题","a"],["提出创意","b"],["安排任务","c"],["沟通协调","d"]]],
 ["你更擅长？",[
-["逻辑思考","a"],["表达想法","b"],
-["执行计划","c"],["理解他人","d"]]],
+["逻辑思考","a"],["表达想法","b"],["执行计划","c"],["理解他人","d"]]],
 ["面对困难，你会？",[
-["寻找资料和证据","a"],["换个角度尝试","b"],
-["分步骤解决","c"],["寻求合作","d"]]],
+["寻找资料和证据","a"],["换个角度尝试","b"],["分步骤解决","c"],["寻求合作","d"]]],
 ["你理想的工作环境？",[
-["安静专注","a"],["自由开放","b"],
-["目标明确","c"],["团队互动","d"]]],
+["安静专注","a"],["自由开放","b"],["目标明确","c"],["团队互动","d"]]],
 ["朋友经常称赞你？",[
-["头脑清晰","a"],["有创意","b"],
-["做事靠谱","c"],["善于倾听","d"]]],
+["头脑清晰","a"],["有创意","b"],["做事靠谱","c"],["善于倾听","d"]]],
 ["你最有成就感的时刻？",[
-["解决复杂问题","a"],["创造新作品","b"],
-["完成重要目标","c"],["帮助别人进步","d"]]]
+["解决复杂问题","a"],["创造新作品","b"],["完成重要目标","c"],["帮助别人进步","d"]]]
 ];
+
 const profiles={
 a:{
- name:"探索研究型",
- desc:"你可能更喜欢分析、观察、研究和寻找规律。",
- jobs:"数据分析、科研助理、技术支持、资料研究",
- advice:"尝试培养逻辑分析能力、信息整理能力和专业技能。"
+name:"探索研究型",symbol:"知",
+desc:"你倾向于通过观察、分析和思考理解事物，喜欢寻找规律、解决问题。",
+strength:"逻辑分析、信息整理、独立思考、持续学习",
+jobs:"数据分析助理、科研助理、技术支持、资料研究、质量检查",
+advice:"可以从学习一项专业技能开始，练习数据整理、信息检索和问题分析。"
 },
 b:{
- name:"创意表达型",
- desc:"你可能更喜欢想象、设计、表达和创造新内容。",
- jobs:"平面设计、短视频创作、文案策划、内容运营",
- advice:"尝试制作作品集，持续练习设计与表达。"
+name:"创意表达型",symbol:"创",
+desc:"你倾向于用想象力和表达能力创造新内容，喜欢尝试不同方法。",
+strength:"创意思维、审美表达、内容构思、灵活应变",
+jobs:"平面设计、短视频创作、文案策划、内容运营、视觉编辑",
+advice:"可以从制作个人作品集开始，持续练习写作、设计或视频表达。"
 },
 c:{
- name:"组织执行型",
- desc:"你可能更喜欢规划目标、安排任务和推动事情完成。",
- jobs:"项目助理、运营管理、活动执行、行政协调",
- advice:"尝试训练时间管理、项目规划和执行能力。"
+name:"组织执行型",symbol:"行",
+desc:"你倾向于设定目标、安排步骤并推动事情完成，重视效率和结果。",
+strength:"计划安排、责任意识、任务管理、行动落实",
+jobs:"项目助理、运营助理、活动执行、行政协调、流程管理",
+advice:"可以练习时间管理、任务拆分和项目复盘，积累实际执行经验。"
 },
 d:{
- name:"人际支持型",
- desc:"你可能更喜欢沟通交流、理解需求和帮助他人。",
- jobs:"客户服务、教育辅助、人力资源、社群运营",
- advice:"尝试提升沟通能力、倾听能力和服务意识。"
+name:"人际支持型",symbol:"和",
+desc:"你倾向于关注他人需求，善于交流、倾听和协调关系。",
+strength:"沟通表达、倾听理解、团队协作、服务意识",
+jobs:"客户服务、教育辅助、人力资源助理、社群运营、用户支持",
+advice:"可以练习沟通表达、需求分析和冲突协调，提升专业服务能力。"
 }
 };
+
 let current=0;
 let answers=[];
 const $=id=>document.getElementById(id);
+const keys=["a","b","c","d"];
+
 function render(){
- $("number").textContent=`第 ${current+1} / 8 题`;
+ $("number").textContent=`第 ${current+1} / ${questions.length} 题`;
  $("question").textContent=questions[current][0];
- $("bar").style.width=(current/8*100)+"%";
- $("options").innerHTML=questions[current][1].map(
- (o,i)=>`<label class="option">
- <input type="radio" name="answer" value="${o[1]}"
- onchange="selectAnswer()"> ${o[0]}
+ $("bar").style.width=(current/questions.length*100)+"%";
+ $("options").innerHTML=questions[current][1].map(o=>
+ `<label class="option">
+ <input type="radio" name="answer" value="${o[1]}"> ${o[0]}
  </label>`).join("");
- $("next").textContent=current===7?"查看我的测试结果":"下一题";
+ $("next").textContent=current===questions.length-1?"查看探索结果":"下一题";
  $("next").disabled=true;
+ document.querySelectorAll('input[name="answer"]').forEach(el=>{
+ el.addEventListener("change",()=>{$("next").disabled=false});
+ });
 }
-function selectAnswer(){
- $("next").disabled=false;
-}
+
 function next(){
  const chosen=document.querySelector('input[name="answer"]:checked');
  if(!chosen)return;
  answers[current]=chosen.value;
  current++;
- if(current<8)render();
+ if(current<questions.length)render();
  else showResult();
 }
+
 function showResult(){
  const scores={a:0,b:0,c:0,d:0};
  answers.forEach(x=>scores[x]++);
- const sorted=Object.entries(scores).sort((x,y)=>y[1]-x[1]);
- const main=profiles[sorted[0][0]];
- const second=profiles[sorted[1][0]];
+ const sorted=keys.map(k=>({key:k,score:scores[k]}))
+ .sort((x,y)=>y.score-x.score);
+
+ const top=sorted[0].score;
+ const mainKeys=sorted.filter(x=>x.score===top).map(x=>x.key);
+ const secondScore=sorted.find(x=>x.score<top);
+ const secondKeys=secondScore
+ ? sorted.filter(x=>x.score===secondScore.score).map(x=>x.key)
+ : [];
+
+ const main=mainKeys.map(k=>profiles[k]);
+ const second=secondKeys.map(k=>profiles[k]);
+
+ const scoreHTML=sorted.map(x=>`
+ <div class="score-row">
+ <span>${profiles[x.key].name}</span><b>${x.score}分</b>
+ </div>
+ <div class="score-bg">
+ <div class="score-fill" style="width:${x.score/8*100}%"></div>
+ </div>`).join("");
+
+ const mainHTML=main.map(p=>`
+ <h2>${p.symbol} ${p.name}</h2>
+ <p>${p.desc}</p>
+ <p class="section-title">你的潜在优势</p>
+ <p>${p.strength}</p>
+ <p class="section-title">职业方向参考</p>
+ <p>${p.jobs}</p>
+ <p class="section-title">成长建议</p>
+ <p>${p.advice}</p>`).join("");
+
+ const secondHTML=second.length
+ ? second.map(p=>`<span class="tag">${p.name}</span>`).join("")
+ : "本次没有明显的次要优势类型，建议结合生活经历继续探索。";
+
+ const now=new Date();
+ const date=now.toLocaleDateString("zh-CN");
+ const report=`
+ <div class="result-card">
+ <p style="text-align:center;color:#927b4c">✦ 你的天赋探索报告 ✦</p>
+ ${mainHTML}
+ <div class="line"></div>
+ <p class="section-title">次要优势</p>
+ <p>${secondHTML}</p>
+ <div class="line"></div>
+ <p class="section-title">四项得分</p>
+ ${scoreHTML}
+ <p class="small">测试日期：${date}</p>
+ </div>`;
+
  $("quiz").classList.add("hidden");
  $("bar").style.width="100%";
  $("result").classList.remove("hidden");
  $("result").innerHTML=`
- <h2>🎉 你的探索结果</h2>
- <div class="result">
- <h2>${main.name}</h2>
- <p>${main.desc}</p>
- <p><b>你的次要优势：</b>${second.name}</p>
- <p><b>职业方向参考：</b>${main.jobs}</p>
- <p><b>成长建议：</b>${main.advice}</p>
- <p><b>本次得分：</b>
- ${sorted.map(x=>profiles[x[0]].name+"："+x[1]+"分").join("；")}
- </p>
- </div>
- <button onclick="location.reload()">重新测试</button>
+ <h2 style="text-align:center;color:#36594d">🎋 测试完成</h2>
+ ${report}
+ <button onclick="saveResult()">保存本次结果</button>
+ <button class="secondary" onclick="shareResult()">分享结果</button>
+ <button class="secondary" onclick="location.reload()">重新测试</button>
+ <p class="small" id="message"></p>
  `;
+
+ const data={date,answers,scores,mainKeys,secondKeys};
+ try{localStorage.setItem("talentTestResult",JSON.stringify(data))}
+ catch(e){}
+}
+
+function saveResult(){
+ const data=localStorage.getItem("talentTestResult");
+ if(!data){$("message").textContent="暂时没有可保存的结果。";return}
+ try{
+ const blob=new Blob([data],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="天赋寻踪测试结果.json";
+ a.click();URL.revokeObjectURL(url);
+ $("message").textContent="已尝试保存结果文件，请查看手机下载记录。";
+ }catch(e){
+ $("message").textContent="浏览器暂不支持下载，请使用分享功能保存。";
+ }
+}
+
+async function shareResult(){
+ const data=JSON.parse(localStorage.getItem("talentTestResult")||"{}");
+ const names=(data.mainKeys||[]).map(k=>profiles[k].name).join("、");
+ const content=`我完成了天赋寻踪测试！我的主要优势类型：${names}。你也来探索自己的潜在优势吧！`;
+ try{
+ if(navigator.share){
+ await navigator.share({title:"我的天赋探索结果",text:content,url:location.href});
+ }else if(navigator.clipboard){
+ await navigator.clipboard.writeText(content+" "+location.href);
+ $("message").textContent="分享文字已复制，可以粘贴给朋友。";
+ }else{
+ $("message").textContent=content;
+ }
+ }catch(e){
+ $("message").textContent="分享未完成，你可以再次点击分享按钮。";
+ }
 }
 render();
 </script>
