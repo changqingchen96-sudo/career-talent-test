@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>发现你的隐藏天赋</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:20px;
+ font-family:Arial,"Microsoft YaHei",sans-serif;
+ background:linear-gradient(135deg,#e9edff,#f9eaff);
+ color:#252746
+}
+.container{
+ max-width:520px;margin:25px auto;
+ background:white;padding:24px;
+ border-radius:22px;
+ box-shadow:0 8px 30px #7772
+}
+h1{text-align:center;color:#6256c9}
+.sub{text-align:center;color:#777}
+.progress{
+ height:8px;background:#eee;border-radius:10px;
+ overflow:hidden;margin:22px 0
+}
+.bar{height:100%;width:0;background:#7768e8}
+.question{font-size:19px;font-weight:bold;margin:22px 0}
+.option{
+ display:block;padding:15px;margin:12px 0;
+ border:1px solid #ddd;border-radius:12px;
+ cursor:pointer
+}
+.option:has(input:checked){
+ border-color:#7565df;background:#f0edff
+}
+input{margin-right:9px}
+button{
+ width:100%;padding:15px;border:0;
+ border-radius:12px;background:#7061dc;
+ color:white;font-size:17px;margin-top:15px
+}
+button:disabled{opacity:.4}
+.result{
+ background:#f4f1ff;padding:18px;
+ border-radius:15px;line-height:1.9
+}
+.hidden{display:none}
+.small{font-size:13px;color:#888;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="container">
+ <h1>✨ 发现你的隐藏天赋</h1>
+ <p class="sub">8道题，探索你的潜在优势</p>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <div id="quiz">
+  <div id="number"></div>
+  <div class="question" id="question"></div>
+  <div id="options"></div>
+  <button id="next" disabled onclick="next()">下一题</button>
+ </div>
+ <div id="result" class="hidden"></div>
+ <p class="small">
+ 本测试仅用于兴趣探索和娱乐参考，不属于专业心理测评或职业资格评估。
+ </p>
+</div>
+<script>
+const questions=[
+["遇到陌生问题，你通常会？",[
+["先分析原因和规律","a"],["想出新方法","b"],
+["马上制定行动计划","c"],["找人交流讨论","d"]]],
+["你最喜欢哪种事情？",[
+["研究知识","a"],["设计创作","b"],
+["组织活动","c"],["帮助别人","d"]]],
+["团队合作时，你通常负责？",[
+["分析问题","a"],["提出创意","b"],
+["安排任务","c"],["沟通协调","d"]]],
+["你更擅长？",[
+["逻辑思考","a"],["表达想法","b"],
+["执行计划","c"],["理解他人","d"]]],
+["面对困难，你会？",[
+["寻找资料和证据","a"],["换个角度尝试","b"],
+["分步骤解决","c"],["寻求合作","d"]]],
+["你理想的工作环境？",[
+["安静专注","a"],["自由开放","b"],
+["目标明确","c"],["团队互动","d"]]],
+["朋友经常称赞你？",[
+["头脑清晰","a"],["有创意","b"],
+["做事靠谱","c"],["善于倾听","d"]]],
+["你最有成就感的时刻？",[
+["解决复杂问题","a"],["创造新作品","b"],
+["完成重要目标","c"],["帮助别人进步","d"]]]
+];
+const profiles={
+a:{
+ name:"探索研究型",
+ desc:"你可能更喜欢分析、观察、研究和寻找规律。",
+ jobs:"数据分析、科研助理、技术支持、资料研究",
+ advice:"尝试培养逻辑分析能力、信息整理能力和专业技能。"
+},
+b:{
+ name:"创意表达型",
+ desc:"你可能更喜欢想象、设计、表达和创造新内容。",
+ jobs:"平面设计、短视频创作、文案策划、内容运营",
+ advice:"尝试制作作品集，持续练习设计与表达。"
+},
+c:{
+ name:"组织执行型",
+ desc:"你可能更喜欢规划目标、安排任务和推动事情完成。",
+ jobs:"项目助理、运营管理、活动执行、行政协调",
+ advice:"尝试训练时间管理、项目规划和执行能力。"
+},
+d:{
+ name:"人际支持型",
+ desc:"你可能更喜欢沟通交流、理解需求和帮助他人。",
+ jobs:"客户服务、教育辅助、人力资源、社群运营",
+ advice:"尝试提升沟通能力、倾听能力和服务意识。"
+}
+};
+let current=0;
+let answers=[];
+const $=id=>document.getElementById(id);
+function render(){
+ $("number").textContent=`第 ${current+1} / 8 题`;
+ $("question").textContent=questions[current][0];
+ $("bar").style.width=(current/8*100)+"%";
+ $("options").innerHTML=questions[current][1].map(
+ (o,i)=>`<label class="option">
+ <input type="radio" name="answer" value="${o[1]}"
+ onchange="selectAnswer()"> ${o[0]}
+ </label>`).join("");
+ $("next").textContent=current===7?"查看我的测试结果":"下一题";
+ $("next").disabled=true;
+}
+function selectAnswer(){
+ $("next").disabled=false;
+}
+function next(){
+ const chosen=document.querySelector('input[name="answer"]:checked');
+ if(!chosen)return;
+ answers[current]=chosen.value;
+ current++;
+ if(current<8)render();
+ else showResult();
+}
+function showResult(){
+ const scores={a:0,b:0,c:0,d:0};
+ answers.forEach(x=>scores[x]++);
+ const sorted=Object.entries(scores).sort((x,y)=>y[1]-x[1]);
+ const main=profiles[sorted[0][0]];
+ const second=profiles[sorted[1][0]];
+ $("quiz").classList.add("hidden");
+ $("bar").style.width="100%";
+ $("result").classList.remove("hidden");
+ $("result").innerHTML=`
+ <h2>🎉 你的探索结果</h2>
+ <div class="result">
+ <h2>${main.name}</h2>
+ <p>${main.desc}</p>
+ <p><b>你的次要优势：</b>${second.name}</p>
+ <p><b>职业方向参考：</b>${main.jobs}</p>
+ <p><b>成长建议：</b>${main.advice}</p>
+ <p><b>本次得分：</b>
+ ${sorted.map(x=>profiles[x[0]].name+"："+x[1]+"分").join("；")}
+ </p>
+ </div>
+ <button onclick="location.reload()">重新测试</button>
+ `;
+}
+render();
+</script>
+</body>
+</html>
