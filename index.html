@@ -3,79 +3,63 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>天赋寻踪 · 探索你的隐藏天赋</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>天赋寻踪 V3.0 · 古风天赋探索</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:18px;
- color:#263d39;
+ margin:0;padding:16px;color:#29443b;
  font-family:"Noto Serif SC","Songti SC","Microsoft YaHei",serif;
- background:
- radial-gradient(ellipse at top,#fff9e9 0%,transparent 65%),
- linear-gradient(145deg,#e9e0c9,#f5eddb);
+ background:linear-gradient(145deg,#e8dfc9,#f8f0df);
 }
 .container{
- max-width:560px;margin:22px auto;padding:25px 21px;
- background:#fffaf0;
- border:1px solid #c9b98e;border-radius:8px;
- box-shadow:0 8px 30px #51452a20;
- position:relative;
+ max-width:580px;margin:20px auto;padding:25px 20px;
+ background:#fffaf0;border:1px solid #c9b98e;
+ border-radius:8px;box-shadow:0 8px 30px #51452a20;
 }
-.container:before{
- content:"";position:absolute;inset:7px;
- border:1px solid #e1d5b8;pointer-events:none;
-}
-header{text-align:center;position:relative}
+header{text-align:center}
 .seal{
  display:inline-block;padding:5px 12px;
  border:1px solid #a34d38;color:#a34d38;
- font-size:12px;letter-spacing:3px;
- transform:rotate(-3deg);
+ font-size:12px;letter-spacing:3px;transform:rotate(-3deg)
 }
 h1{font-size:29px;letter-spacing:5px;color:#294b43;margin:17px 0 8px}
 .sub{color:#85785d;font-size:14px;letter-spacing:2px}
 .line{height:1px;background:linear-gradient(90deg,transparent,#b69b61,transparent);margin:20px 0}
 .progress{height:7px;background:#e9e0ce;border-radius:10px;overflow:hidden}
 .bar{height:100%;width:0;background:linear-gradient(90deg,#52766a,#c09a50);transition:.3s}
-.question{font-size:19px;font-weight:bold;line-height:1.8;margin:24px 0 15px}
-.number{font-size:13px;color:#9b8355}
+.number{font-size:13px;color:#9b8355;margin-top:20px}
+.question{font-size:19px;font-weight:bold;line-height:1.8;margin:12px 0 18px}
 .option{
  display:block;padding:14px;margin:11px 0;
  border:1px solid #ded2b7;border-radius:5px;
- background:#fffdf7;line-height:1.6;cursor:pointer;
- transition:.2s
+ background:#fffdf7;line-height:1.7;cursor:pointer
 }
-.option:has(input:checked){
- border-color:#55786c;background:#edf2e9;
- color:#294b43
-}
+.option:has(input:checked){border-color:#55786c;background:#edf2e9}
 input{accent-color:#55786c;margin-right:9px}
 button{
  width:100%;padding:14px;border:1px solid #526f62;
- border-radius:5px;background:#36594d;
- color:#fff8e9;font-size:16px;letter-spacing:2px;
- margin-top:13px;cursor:pointer
+ border-radius:5px;background:#36594d;color:#fff8e9;
+ font-size:16px;letter-spacing:2px;margin-top:12px;cursor:pointer
 }
 button:disabled{opacity:.4}
 button.secondary{background:#f8f1e2;color:#36594d}
-.result-card{
+.card{
  background:#f5f0e3;border:1px solid #d8c9a7;
- padding:18px;border-radius:5px;line-height:1.9;
- margin:15px 0
+ padding:17px;border-radius:5px;line-height:1.9;margin:14px 0
 }
-.result-card h2{color:#36594d;text-align:center}
-.tag{
- display:inline-block;border:1px solid #b49b65;
- padding:3px 9px;margin:3px;color:#80683d;font-size:12px
-}
-.section-title{color:#8a7040;font-weight:bold;margin-top:17px}
-.small{font-size:12px;color:#95896f;line-height:1.8}
-.hidden{display:none}
+.card h2{text-align:center;color:#36594d}
+.section-title{color:#8a7040;font-weight:bold;margin:17px 0 5px}
+.tag{display:inline-block;border:1px solid #b49b65;padding:3px 9px;margin:3px;color:#80683d;font-size:12px}
 .score-row{display:flex;justify-content:space-between;margin:8px 0}
 .score-bg{height:7px;background:#e7dfcf;border-radius:8px;overflow:hidden}
 .score-fill{height:100%;background:#789184}
-footer{text-align:center;margin-top:22px;color:#9a8a6c;font-size:12px}
+.day{padding:9px 0;border-bottom:1px dashed #d8c9a7}
+.day b{color:#8a7040}
+.small{font-size:12px;color:#95896f;line-height:1.8}
+.price{text-align:center;padding:15px;border:1px dashed #b49b65;background:#fbf5e8;margin:15px 0}
+.hidden{display:none}
+footer{text-align:center;margin-top:22px;color:#9a8a6c;font-size:12px;line-height:1.8}
 </style>
 </head>
 <body>
@@ -84,6 +68,7 @@ footer{text-align:center;margin-top:22px;color:#9a8a6c;font-size:12px}
  <div class="seal">古风 · 天赋探索</div>
  <h1>天赋寻踪</h1>
  <p class="sub">观己所长 · 寻心之所向</p>
+ <p class="small">V3.0 个性化深度报告版</p>
 </header>
 <div class="line"></div>
 
@@ -127,30 +112,42 @@ const profiles={
 a:{
 name:"探索研究型",symbol:"知",
 desc:"你倾向于通过观察、分析和思考理解事物，喜欢寻找规律、解决问题。",
-strength:"逻辑分析、信息整理、独立思考、持续学习",
-jobs:"数据分析助理、科研助理、技术支持、资料研究、质量检查",
-advice:"可以从学习一项专业技能开始，练习数据整理、信息检索和问题分析。"
+strength:"逻辑分析、信息整理、独立思考、持续学习。",
+watch:"有时可能过度分析，迟迟不开始行动；也可能因为专注细节而忽略沟通。",
+environment:"适合目标清晰、允许独立思考、有学习空间的环境。",
+jobs:"数据分析助理、科研助理、技术支持、资料研究、质量检查。",
+route:["选择一个感兴趣的专业领域","学习基础知识和常用工具","完成一个小型分析或研究作品","整理成果，尝试相关实习或初级岗位。"],
+plan:["第1—3天：选择一个感兴趣的研究主题","第4—7天：每天阅读并整理一条可靠资料","第8—12天：学习一种信息整理或表格工具","第13—18天：围绕主题做一次小分析","第19—24天：把分析整理成一份作品","第25—30天：复盘成果，制定下一阶段学习计划。"]
 },
 b:{
 name:"创意表达型",symbol:"创",
 desc:"你倾向于用想象力和表达能力创造新内容，喜欢尝试不同方法。",
-strength:"创意思维、审美表达、内容构思、灵活应变",
-jobs:"平面设计、短视频创作、文案策划、内容运营、视觉编辑",
-advice:"可以从制作个人作品集开始，持续练习写作、设计或视频表达。"
+strength:"创意思维、审美表达、内容构思、灵活应变。",
+watch:"有时可能想法很多却难以完成；也可能过于追求新鲜感，缺少持续打磨。",
+environment:"适合有一定自主空间、重视创意成果、能够尝试新方法的环境。",
+jobs:"平面设计、短视频创作、文案策划、内容运营、视觉编辑。",
+route:["选择一种表达形式，如写作、设计或视频","学习基础创作工具和表达技巧","独立完成一件小作品","整理作品集，尝试投稿或相关初级岗位。"],
+plan:["第1—3天：确定一个创作主题","第4—7天：收集参考作品，分析其特点","第8—12天：学习一种免费创作工具","第13—18天：完成第一件原创作品","第19—24天：根据反馈修改作品","第25—30天：整理作品集，规划下一次创作。"]
 },
 c:{
 name:"组织执行型",symbol:"行",
 desc:"你倾向于设定目标、安排步骤并推动事情完成，重视效率和结果。",
-strength:"计划安排、责任意识、任务管理、行动落实",
-jobs:"项目助理、运营助理、活动执行、行政协调、流程管理",
-advice:"可以练习时间管理、任务拆分和项目复盘，积累实际执行经验。"
+strength:"计划安排、责任意识、任务管理、行动落实。",
+watch:"有时可能过于关注进度，忽略过程中的沟通；也可能承担过多任务。",
+environment:"适合职责明确、目标具体、流程清晰并能看到成果的环境。",
+jobs:"项目助理、运营助理、活动执行、行政协调、流程管理。",
+route:["学习基础办公和任务管理工具","练习把大任务拆成小步骤","独立组织一次小型活动或项目","整理执行成果，尝试相关助理岗位。"],
+plan:["第1—3天：写下一个可实现的小目标","第4—7天：把目标拆成每日任务","第8—12天：练习使用日程或任务清单","第13—18天：独立完成一个小项目","第19—24天：记录时间和执行情况","第25—30天：复盘效率，改进计划方法。"]
 },
 d:{
 name:"人际支持型",symbol:"和",
 desc:"你倾向于关注他人需求，善于交流、倾听和协调关系。",
-strength:"沟通表达、倾听理解、团队协作、服务意识",
-jobs:"客户服务、教育辅助、人力资源助理、社群运营、用户支持",
-advice:"可以练习沟通表达、需求分析和冲突协调，提升专业服务能力。"
+strength:"沟通表达、倾听理解、团队协作、服务意识。",
+watch:"有时可能过度照顾别人的感受，忽略自身需求；也可能不容易拒绝额外请求。",
+environment:"适合重视合作、沟通频繁、服务对象和工作职责明确的环境。",
+jobs:"客户服务、教育辅助、人力资源助理、社群运营、用户支持。",
+route:["练习清晰表达和主动倾听","学习客户沟通或基础服务知识","参与一次团队协作或志愿活动","整理经验，尝试客服、运营或教育辅助岗位。"],
+plan:["第1—3天：记录自己常用的沟通方式","第4—7天：练习倾听并复述对方需求","第8—12天：学习基础沟通与服务技巧","第13—18天：完成一次主动沟通练习","第19—24天：复盘一次合作经历","第25—30天：整理经验，设定沟通提升目标。"]
 }
 };
 
@@ -160,14 +157,13 @@ const $=id=>document.getElementById(id);
 const keys=["a","b","c","d"];
 
 function render(){
- $("number").textContent=`第 ${current+1} / ${questions.length} 题`;
+ $("number").textContent=`第 ${current+1} / 8 题`;
  $("question").textContent=questions[current][0];
- $("bar").style.width=(current/questions.length*100)+"%";
+ $("bar").style.width=(current/8*100)+"%";
  $("options").innerHTML=questions[current][1].map(o=>
- `<label class="option">
- <input type="radio" name="answer" value="${o[1]}"> ${o[0]}
- </label>`).join("");
- $("next").textContent=current===questions.length-1?"查看探索结果":"下一题";
+ `<label class="option"><input type="radio" name="answer" value="${o[1]}"> ${o[0]}</label>`
+ ).join("");
+ $("next").textContent=current===7?"查看深度报告":"下一题";
  $("next").disabled=true;
  document.querySelectorAll('input[name="answer"]').forEach(el=>{
  el.addEventListener("change",()=>{$("next").disabled=false});
@@ -179,7 +175,7 @@ function next(){
  if(!chosen)return;
  answers[current]=chosen.value;
  current++;
- if(current<questions.length)render();
+ if(current<8)render();
  else showResult();
 }
 
@@ -191,90 +187,106 @@ function showResult(){
 
  const top=sorted[0].score;
  const mainKeys=sorted.filter(x=>x.score===top).map(x=>x.key);
- const secondScore=sorted.find(x=>x.score<top);
- const secondKeys=secondScore
- ? sorted.filter(x=>x.score===secondScore.score).map(x=>x.key)
+ const nextScore=sorted.find(x=>x.score<top);
+ const secondKeys=nextScore
+ ? sorted.filter(x=>x.score===nextScore.score).map(x=>x.key)
  : [];
 
  const main=mainKeys.map(k=>profiles[k]);
  const second=secondKeys.map(k=>profiles[k]);
 
- const scoreHTML=sorted.map(x=>`
- <div class="score-row">
- <span>${profiles[x.key].name}</span><b>${x.score}分</b>
- </div>
- <div class="score-bg">
- <div class="score-fill" style="width:${x.score/8*100}%"></div>
- </div>`).join("");
-
  const mainHTML=main.map(p=>`
+ <div class="card">
  <h2>${p.symbol} ${p.name}</h2>
  <p>${p.desc}</p>
- <p class="section-title">你的潜在优势</p>
- <p>${p.strength}</p>
- <p class="section-title">职业方向参考</p>
- <p>${p.jobs}</p>
- <p class="section-title">成长建议</p>
- <p>${p.advice}</p>`).join("");
+ <p class="section-title">一、潜在优势</p><p>${p.strength}</p>
+ <p class="section-title">二、需要留意的地方</p><p>${p.watch}</p>
+ <p class="section-title">三、适合的工作环境</p><p>${p.environment}</p>
+ <p class="section-title">四、职业方向参考</p><p>${p.jobs}</p>
+ <p class="section-title">五、职业入门路线</p>
+ <ol>${p.route.map(x=>`<li>${x}</li>`).join("")}</ol>
+ </div>`).join("");
+
+ const planProfile=main[0];
+ const planHTML=planProfile.plan.map(x=>`<div class="day">${x}</div>`).join("");
+
+ const scoreHTML=sorted.map(x=>`
+ <div class="score-row"><span>${profiles[x.key].name}</span><b>${x.score}分</b></div>
+ <div class="score-bg"><div class="score-fill" style="width:${x.score/8*100}%"></div></div>
+ `).join("");
 
  const secondHTML=second.length
  ? second.map(p=>`<span class="tag">${p.name}</span>`).join("")
- : "本次没有明显的次要优势类型，建议结合生活经历继续探索。";
+ : "四种类型得分相同或没有较低分类型，本次无法区分次要优势。";
 
- const now=new Date();
- const date=now.toLocaleDateString("zh-CN");
- const report=`
- <div class="result-card">
- <p style="text-align:center;color:#927b4c">✦ 你的天赋探索报告 ✦</p>
- ${mainHTML}
- <div class="line"></div>
- <p class="section-title">次要优势</p>
- <p>${secondHTML}</p>
- <div class="line"></div>
- <p class="section-title">四项得分</p>
- ${scoreHTML}
- <p class="small">测试日期：${date}</p>
- </div>`;
+ const date=new Date().toLocaleDateString("zh-CN");
+ const reportText=
+ "天赋寻踪深度报告\n"+
+ "主要优势："+main.map(p=>p.name).join("、")+"\n"+
+ "次要优势："+second.map(p=>p.name).join("、")+"\n"+
+ "测试得分："+sorted.map(x=>profiles[x.key].name+x.score+"分").join("；")+"\n"+
+ "职业方向："+main.map(p=>p.jobs).join("；")+"\n"+
+ "测试日期："+date;
+
+ const data={version:"V3.0",date,answers,scores,mainKeys,secondKeys};
+
+ try{localStorage.setItem("talentTestResultV3",JSON.stringify(data))}
+ catch(e){}
 
  $("quiz").classList.add("hidden");
  $("bar").style.width="100%";
  $("result").classList.remove("hidden");
  $("result").innerHTML=`
- <h2 style="text-align:center;color:#36594d">🎋 测试完成</h2>
- ${report}
- <button onclick="saveResult()">保存本次结果</button>
- <button class="secondary" onclick="shareResult()">分享结果</button>
+ <h2 style="text-align:center;color:#36594d">🎋 你的专属深度报告</h2>
+ <p class="small" style="text-align:center">报告日期：${date}</p>
+ <div class="card">
+ <p class="section-title">主要优势类型</p>
+ ${main.map(p=>`<span class="tag">${p.name}</span>`).join("")}
+ <p class="section-title">次要优势类型</p>${secondHTML}
+ <div class="line"></div>
+ <p class="section-title">四项能力得分</p>${scoreHTML}
+ </div>
+ ${mainHTML}
+ <div class="card">
+ <h2>📅 30天成长行动计划</h2>
+ <p>根据你的主要优势类型「${planProfile.name}」生成。每天完成一点，逐步积累经验。</p>
+ ${planHTML}
+ </div>
+ <div class="price">
+ <b>深度报告计划体验价：¥2 / 份</b>
+ <p class="small">当前为免费测试体验版，尚未开通真实支付。页面展示价格不代表已经可以购买。</p>
+ </div>
+ <button onclick="saveResult()">保存测试结果</button>
+ <button class="secondary" onclick="shareResult()">分享测试结果</button>
  <button class="secondary" onclick="location.reload()">重新测试</button>
  <p class="small" id="message"></p>
+ <p class="small">本报告根据8道自我选择题生成，仅供兴趣探索和职业思考参考，不保证职业适配或就业结果。</p>
  `;
-
- const data={date,answers,scores,mainKeys,secondKeys};
- try{localStorage.setItem("talentTestResult",JSON.stringify(data))}
- catch(e){}
 }
 
 function saveResult(){
- const data=localStorage.getItem("talentTestResult");
- if(!data){$("message").textContent="暂时没有可保存的结果。";return}
+ const data=localStorage.getItem("talentTestResultV3");
+ if(!data){$("message").textContent="没有找到测试结果。";return}
  try{
  const blob=new Blob([data],{type:"application/json"});
  const url=URL.createObjectURL(blob);
  const a=document.createElement("a");
- a.href=url;a.download="天赋寻踪测试结果.json";
- a.click();URL.revokeObjectURL(url);
- $("message").textContent="已尝试保存结果文件，请查看手机下载记录。";
+ a.href=url;a.download="天赋寻踪V3深度报告.json";
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("message").textContent="已生成结果文件，请查看手机的下载记录。";
  }catch(e){
- $("message").textContent="浏览器暂不支持下载，请使用分享功能保存。";
+ $("message").textContent="下载失败，请尝试分享结果。";
  }
 }
 
 async function shareResult(){
- const data=JSON.parse(localStorage.getItem("talentTestResult")||"{}");
+ const data=JSON.parse(localStorage.getItem("talentTestResultV3")||"{}");
  const names=(data.mainKeys||[]).map(k=>profiles[k].name).join("、");
- const content=`我完成了天赋寻踪测试！我的主要优势类型：${names}。你也来探索自己的潜在优势吧！`;
+ const content=`我完成了天赋寻踪测试！主要优势：${names}。你也可以来探索自己的潜在优势。`;
  try{
  if(navigator.share){
- await navigator.share({title:"我的天赋探索结果",text:content,url:location.href});
+ await navigator.share({title:"我的天赋寻踪报告",text:content,url:location.href});
  }else if(navigator.clipboard){
  await navigator.clipboard.writeText(content+" "+location.href);
  $("message").textContent="分享文字已复制，可以粘贴给朋友。";
@@ -282,7 +294,7 @@ async function shareResult(){
  $("message").textContent=content;
  }
  }catch(e){
- $("message").textContent="分享未完成，你可以再次点击分享按钮。";
+ $("message").textContent="分享没有完成，可以再次尝试。";
  }
 }
 render();
