@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>天赋寻踪 V3.0 · 古风天赋探索</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:16px;color:#29443b;
+ font-family:"Noto Serif SC","Songti SC","Microsoft YaHei",serif;
+ background:linear-gradient(145deg,#e8dfc9,#f8f0df);
+}
+.container{
+ max-width:580px;margin:20px auto;padding:25px 20px;
+ background:#fffaf0;border:1px solid #c9b98e;
+ border-radius:8px;box-shadow:0 8px 30px #51452a20;
+}
+header{text-align:center}
+.seal{
+ display:inline-block;padding:5px 12px;
+ border:1px solid #a34d38;color:#a34d38;
+ font-size:12px;letter-spacing:3px;transform:rotate(-3deg)
+}
+h1{font-size:29px;letter-spacing:5px;color:#294b43;margin:17px 0 8px}
+.sub{color:#85785d;font-size:14px;letter-spacing:2px}
+.line{height:1px;background:linear-gradient(90deg,transparent,#b69b61,transparent);margin:20px 0}
+.progress{height:7px;background:#e9e0ce;border-radius:10px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#52766a,#c09a50);transition:.3s}
+.number{font-size:13px;color:#9b8355;margin-top:20px}
+.question{font-size:19px;font-weight:bold;line-height:1.8;margin:12px 0 18px}
+.option{
+ display:block;padding:14px;margin:11px 0;
+ border:1px solid #ded2b7;border-radius:5px;
+ background:#fffdf7;line-height:1.7;cursor:pointer
+}
+.option:has(input:checked){border-color:#55786c;background:#edf2e9}
+input{accent-color:#55786c;margin-right:9px}
+button{
+ width:100%;padding:14px;border:1px solid #526f62;
+ border-radius:5px;background:#36594d;color:#fff8e9;
+ font-size:16px;letter-spacing:2px;margin-top:12px;cursor:pointer
+}
+button:disabled{opacity:.4}
+button.secondary{background:#f8f1e2;color:#36594d}
+.card{
+ background:#f5f0e3;border:1px solid #d8c9a7;
+ padding:17px;border-radius:5px;line-height:1.9;margin:14px 0
+}
+.card h2{text-align:center;color:#36594d}
+.section-title{color:#8a7040;font-weight:bold;margin:17px 0 5px}
+.tag{display:inline-block;border:1px solid #b49b65;padding:3px 9px;margin:3px;color:#80683d;font-size:12px}
+.score-row{display:flex;justify-content:space-between;margin:8px 0}
+.score-bg{height:7px;background:#e7dfcf;border-radius:8px;overflow:hidden}
+.score-fill{height:100%;background:#789184}
+.day{padding:9px 0;border-bottom:1px dashed #d8c9a7}
+.day b{color:#8a7040}
+.small{font-size:12px;color:#95896f;line-height:1.8}
+.price{text-align:center;padding:15px;border:1px dashed #b49b65;background:#fbf5e8;margin:15px 0}
+.hidden{display:none}
+footer{text-align:center;margin-top:22px;color:#9a8a6c;font-size:12px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+ <div class="seal">古风 · 天赋探索</div>
+ <h1>天赋寻踪</h1>
+ <p class="sub">观己所长 · 寻心之所向</p>
+ <p class="small">V3.0 个性化深度报告版</p>
+</header>
+<div class="line"></div>
+
+<div id="quiz">
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <p class="number" id="number"></p>
+ <div class="question" id="question"></div>
+ <div id="options"></div>
+ <button id="next" disabled onclick="next()">下一题</button>
+</div>
+
+<div id="result" class="hidden"></div>
+
+<footer>
+ 一测观其趣，长久见其才<br>
+ 本测试仅用于兴趣探索与娱乐参考，不属于专业心理测评或职业资格评估。
+</footer>
+</div>
+
+<script>
+const questions=[
+["遇到陌生问题，你通常会？",[
+["先分析原因和规律","a"],["想出新方法","b"],["马上制定行动计划","c"],["找人交流讨论","d"]]],
+["你最喜欢哪种事情？",[
+["研究知识","a"],["设计创作","b"],["组织活动","c"],["帮助别人","d"]]],
+["团队合作时，你通常负责？",[
+["分析问题","a"],["提出创意","b"],["安排任务","c"],["沟通协调","d"]]],
+["你更擅长？",[
+["逻辑思考","a"],["表达想法","b"],["执行计划","c"],["理解他人","d"]]],
+["面对困难，你会？",[
+["寻找资料和证据","a"],["换个角度尝试","b"],["分步骤解决","c"],["寻求合作","d"]]],
+["你理想的工作环境？",[
+["安静专注","a"],["自由开放","b"],["目标明确","c"],["团队互动","d"]]],
+["朋友经常称赞你？",[
+["头脑清晰","a"],["有创意","b"],["做事靠谱","c"],["善于倾听","d"]]],
+["你最有成就感的时刻？",[
+["解决复杂问题","a"],["创造新作品","b"],["完成重要目标","c"],["帮助别人进步","d"]]]
+];
+
+const profiles={
+a:{
+name:"探索研究型",symbol:"知",
+desc:"你倾向于通过观察、分析和思考理解事物，喜欢寻找规律、解决问题。",
+strength:"逻辑分析、信息整理、独立思考、持续学习。",
+watch:"有时可能过度分析，迟迟不开始行动；也可能因为专注细节而忽略沟通。",
+environment:"适合目标清晰、允许独立思考、有学习空间的环境。",
+jobs:"数据分析助理、科研助理、技术支持、资料研究、质量检查。",
+route:["选择一个感兴趣的专业领域","学习基础知识和常用工具","完成一个小型分析或研究作品","整理成果，尝试相关实习或初级岗位。"],
+plan:["第1—3天：选择一个感兴趣的研究主题","第4—7天：每天阅读并整理一条可靠资料","第8—12天：学习一种信息整理或表格工具","第13—18天：围绕主题做一次小分析","第19—24天：把分析整理成一份作品","第25—30天：复盘成果，制定下一阶段学习计划。"]
+},
+b:{
+name:"创意表达型",symbol:"创",
+desc:"你倾向于用想象力和表达能力创造新内容，喜欢尝试不同方法。",
+strength:"创意思维、审美表达、内容构思、灵活应变。",
+watch:"有时可能想法很多却难以完成；也可能过于追求新鲜感，缺少持续打磨。",
+environment:"适合有一定自主空间、重视创意成果、能够尝试新方法的环境。",
+jobs:"平面设计、短视频创作、文案策划、内容运营、视觉编辑。",
+route:["选择一种表达形式，如写作、设计或视频","学习基础创作工具和表达技巧","独立完成一件小作品","整理作品集，尝试投稿或相关初级岗位。"],
+plan:["第1—3天：确定一个创作主题","第4—7天：收集参考作品，分析其特点","第8—12天：学习一种免费创作工具","第13—18天：完成第一件原创作品","第19—24天：根据反馈修改作品","第25—30天：整理作品集，规划下一次创作。"]
+},
+c:{
+name:"组织执行型",symbol:"行",
+desc:"你倾向于设定目标、安排步骤并推动事情完成，重视效率和结果。",
+strength:"计划安排、责任意识、任务管理、行动落实。",
+watch:"有时可能过于关注进度，忽略过程中的沟通；也可能承担过多任务。",
+environment:"适合职责明确、目标具体、流程清晰并能看到成果的环境。",
+jobs:"项目助理、运营助理、活动执行、行政协调、流程管理。",
+route:["学习基础办公和任务管理工具","练习把大任务拆成小步骤","独立组织一次小型活动或项目","整理执行成果，尝试相关助理岗位。"],
+plan:["第1—3天：写下一个可实现的小目标"
